@@ -1,0 +1,26 @@
+{
+    "name":              "yakiv-khorunzhyi/date-time-library",
+    "description":       "Simple library for working with DateTime.",
+    "type":              "library",
+    "version":           "1",
+    "license":           "MIT",
+    "authors":           [
+        {
+            "name":  "Yakiv Khorunzyi",
+            "email": "yakiv.khorunzhyi@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload":          {
+        "psr-4": {
+            "Library\\": "src/",
+            "Test\\":    "tests/"
+        }
+    },
+    "require":           {
+        "php": ">=7.2"
+    },
+    "require-dev":       {
+        "phpunit/phpunit": "^7.5"
+    }
+}
