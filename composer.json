@@ -1,5 +1,5 @@
 {
-    "name":              "yakiv-khorunzhyi/date-time-library",
+    "name":              "yakiv-khorunzhyi/date-time-lib",
     "description":       "Simple library for working with DateTime.",
     "type":              "library",
     "version":           "1",
