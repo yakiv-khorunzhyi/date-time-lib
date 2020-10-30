@@ -9,11 +9,11 @@ Simple library for working with DateTime.
 ## Installation
 Install the latest version with:
 ```
-$ composer require yakiv-khorunzhyi/date-time-library
+$ composer require yakiv-khorunzhyi/date-time-lib
 ```
 
 ## More resources:
-* [Documentation](https://github.com/yakiv-khorunzhyi/date-time-library/blob/master/docs/index.md)
+* [Documentation](https://github.com/yakiv-khorunzhyi/date-time-lib/blob/master/docs/index.md)
 
 ## License
-[MIT license.](https://github.com/yakiv-khorunzhyi/date-time-library/blob/master/LICENSE)
+[MIT license.](https://github.com/yakiv-khorunzhyi/date-time-lib/blob/master/LICENSE)
