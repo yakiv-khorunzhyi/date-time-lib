@@ -13,8 +13,8 @@
     "minimum-stability": "stable",
     "autoload":          {
         "psr-4": {
-            "Lib\\": "src/",
-            "Test\\":    "tests/"
+            "Lib\\":  "src/",
+            "Test\\": "tests/"
         }
     },
     "require":           {
