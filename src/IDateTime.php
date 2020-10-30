@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Library;
+namespace Lib;
 
 interface IDateTime
 {

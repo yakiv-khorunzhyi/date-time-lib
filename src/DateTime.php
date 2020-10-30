@@ -8,9 +8,9 @@
 
 declare(strict_types=1);
 
-namespace Library;
+namespace Lib;
 
-class DateTime implements \Library\IDateTime
+class DateTime implements \Lib\IDateTime
 {
     public const DEFAULT_FORMAT = 'Y-m-d H:i:s';
 

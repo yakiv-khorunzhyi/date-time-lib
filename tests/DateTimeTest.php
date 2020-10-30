@@ -12,14 +12,14 @@ namespace Test;
 
 class DateTimeTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var \Library\DateTime */
+    /** @var \Lib\DateTime */
     private static $libDateTime;
 
     ////////////////////////////////////////////////////////////////
 
     public static function setUpBeforeClass(): void
     {
-        self::$libDateTime = new \Library\DateTime();
+        self::$libDateTime = new \Lib\DateTime();
     }
 
     ////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
         $dateTime  = new \DateTime('now', new \DateTimeZone('UTC'));
         $timestamp = $dateTime->getTimestamp();
 
-        self::$libDateTime->addSeconds($dateTime, 25 * \Library\DateTime::SECONDS_PER_MINUTE);
+        self::$libDateTime->addSeconds($dateTime, 25 * \Lib\DateTime::SECONDS_PER_MINUTE);
 
         self::assertEquals(
             $timestamp + (25 * 60),

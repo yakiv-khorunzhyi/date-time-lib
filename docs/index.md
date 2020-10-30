@@ -2,7 +2,7 @@
 
 Creation methods:
 ```
-$libDateTime = new \Library\DateTime();
+$libDateTime = new \Lib\DateTime();
 
 $libDateTime->create();    // simple create
 
@@ -31,5 +31,5 @@ Modification methods:
 ```
 $dateTime = $libDateTime->create();
 
-$libDateTime->addSeconds($dateTime, 25 * \Library\DateTime::SECONDS_PER_MINUTE);    // add in minutes
+$libDateTime->addSeconds($dateTime, 25 * \Lib\DateTime::SECONDS_PER_MINUTE);    // add in minutes
 ```
