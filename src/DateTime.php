@@ -56,9 +56,9 @@ class DateTime implements \Lib\IDateTime
             case is_null($value):
                 return new \DateTime('now', $this->timeZone);
             case is_string($value):
-                return $this->getDateTimeFromString($value, $format);
+                return $this->createDateTimeFromString($value, $format);
             case is_integer($value):
-                return $this->getDateTimeFromTimestamp($value);
+                return $this->createDateTimeFromTimestamp($value);
             default:
                 throw new \LogicException('Unsupported type: ' . gettype($value) . '. Used string or int.');
         }
@@ -75,9 +75,9 @@ class DateTime implements \Lib\IDateTime
             case $value instanceof \DateTime:
                 return $value->format($formatTo);
             case is_string($value):
-                return $this->getDateTimeFromString($value, $formatFrom)->format($formatTo);
+                return $this->createDateTimeFromString($value, $formatFrom)->format($formatTo);
             case is_integer($value):
-                return $this->getDateTimeFromTimestamp($value)->format($formatTo);
+                return $this->createDateTimeFromTimestamp($value)->format($formatTo);
             default:
                 throw new \LogicException(
                     'Unsupported type: ' . gettype($value) . '. Used \DateTime, string or int.'
@@ -96,7 +96,7 @@ class DateTime implements \Lib\IDateTime
 
     ////////////////////////////////////////////////////////////////
 
-    private function getDateTimeFromString(string $value, string $format): \DateTime
+    private function createDateTimeFromString(string $value, string $format): \DateTime
     {
         $dateTime = \DateTime::createFromFormat($format, $value);
 
@@ -109,7 +109,7 @@ class DateTime implements \Lib\IDateTime
         return $dateTime;
     }
 
-    private function getDateTimeFromTimestamp(int $timestamp): \DateTime
+    private function createDateTimeFromTimestamp(int $timestamp): \DateTime
     {
         $dateTime = $this->create();
         $dateTime->setTimestamp($timestamp);
