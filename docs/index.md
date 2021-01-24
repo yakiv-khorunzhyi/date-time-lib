@@ -2,34 +2,58 @@
 
 Creation methods:
 ```
-$libDateTime = new \Lib\DateTime();
+$dateTimeFacade = new \Library\DateTime\Facade();
 
-$libDateTime->create();    // simple create
+$dateTime = $dateTimeFacade->create();    // returned object \Library\DateTimeInterface
 
-$dateTime = $libDateTime->create('2020-10-10', 'Y-m-d');    // create from string
+$dateTime = $dateTimeFacade->createFromString(
+    '2020-10-10', 
+    \Library\DateTime\Format::DATE_DASH, 
+    \Library\DateTime\TimeZone::UTC
+);
 
-$dateTime = $libDateTime->create(time());    // create from timestamp
+$dateTime = $dateTimeFacade->createFromTimestamp(time());
+
+$dateTime = $dateTimeFacade->createFromDate(2020, 10, 10);
+
+$dateTime = $dateTimeFacade->createFromJson('{
+    "date_time": "2020-11-11 12:12:12",
+    "time_zone": "UTC"
+}');
+
 ```
 
 Receiving methods:
 ```
-$dateTimeString = $libDateTime->getAsString('Y-m-d');    // '2020-10-10'
+$dateTimeString = $dateTimeFacade->now('Y-m-d');    // '2020-10-10'
 
-$timestamp = $libDateTime->getTimestamp();
+$timestamp = $dateTimeFacade->nowTimestamp();
 ```
 
 Formatting methods:
 ```
-$dateTimeAsString = $libDateTime->format($libDateTime->create(), 'Y-m-d');    // from instance \DateTime
+$dateTimeAsString = $dateTimeFacade->formatDateTime(new \DateTime('now'), 'Y-m-d');
 
-$dateTimeAsString = $libDateTime->format('2020-10-10', 'd.m.Y', 'Y-m-d');    // from string
+$dateTimeAsString = $dateTimeFacade->formatString('2020-10-10', 'd.m.Y', 'Y-m-d');
 
-$dateTimeAsString = $libDateTime->format(time(), 'Y-m-d');    // from timestamp
+$dateTimeAsString = $dateTimeFacade->formatTimestamp(time(), 'Y-m-d');
 ```
 
-Modification methods:
+Time zone methods: 
 ```
-$dateTime = $libDateTime->create();
+$timeZoneName = $dateTimeFacade->getTimeZoneName();    // 'UTC'
 
-$libDateTime->addSeconds($dateTime, 25 * \Lib\DateTime::SECONDS_PER_MINUTE);    // add in minutes
+$assocArr = $dateTimeFacade->getAllTimeZones();    // [ "Pacific/Wallis" => "+12:00", ... ]
+
+$offset = $dateTimeFacade->getTimeZoneOffset();    //"+00:00"
+```
+
+Validation:
+```
+$isValid = $dateTimeFacade->isValidFormat('2020-10-10', 'Y-m-d');
+```
+
+Сonverting:
+```
+$json = $dateTimeFacade->convertToJson($dateTime);    //"{"date_time":"2021-01-24 13:06:24","time_zone":"UTC"}"
 ```

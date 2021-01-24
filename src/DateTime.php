@@ -1,120 +1,243 @@
 <?php
 
-/**
- * @author       Yakiv Khorunzhyi
- * @copyright    2020
- * @license      MIT
- */
-
 declare(strict_types=1);
 
-namespace Lib;
+namespace Library;
 
-class DateTime implements \Lib\IDateTime
+class DateTime implements \Library\DateTimeInterface
 {
-    public const DEFAULT_FORMAT = 'Y-m-d H:i:s';
+    /** @var string */
+    private $format;
 
-    public const SECONDS_PER_MINUTE = 60;
-    public const SECONDS_PER_HOUR   = 3600;
-    public const SECONDS_PER_DAY    = 86400;
-    public const SECONDS_PER_WEEK   = 604800;
-
-    /** @var \DateTimeZone */
-    private $timeZone;
+    /** @var \DateTime */
+    private $dateTime;
 
     ////////////////////////////////////////////////////////////////
 
-    public function __construct()
+    public function __construct(\DateTime $dateTime, string $format)
     {
-        $this->timeZone = new \DateTimeZone('UTC');
+        $this->format   = $format;
+        $this->dateTime = $dateTime;
     }
 
     ////////////////////////////////////////////////////////////////
 
-    public function setTimeZone(string $timeZone): self
+    public function isSunday(): bool
     {
-        $this->timeZone = new \DateTimeZone($timeZone);
+        return (int)$this->dateTime->format('N') === self::SUNDAY;
+    }
+
+    public function isMonday(): bool
+    {
+        return (int)$this->dateTime->format('N') === self::MONDAY;
+    }
+
+    public function isTuesday(): bool
+    {
+        return (int)$this->dateTime->format('N') === self::TUESDAY;
+    }
+
+    public function isWednesday(): bool
+    {
+        return (int)$this->dateTime->format('N') === self::WEDNESDAY;
+    }
+
+    public function isThursday(): bool
+    {
+        return (int)$this->dateTime->format('N') === self::THURSDAY;
+    }
+
+    public function isFriday(): bool
+    {
+        return (int)$this->dateTime->format('N') === self::FRIDAY;
+    }
+
+    public function isSaturday(): bool
+    {
+        return (int)$this->dateTime->format('N') === self::SATURDAY;
+    }
+
+    public function isToday(): bool
+    {
+        return $this->dateTime->format('Y-m-d') === $this->now()->format('Y-m-d');
+    }
+
+    public function isFuture(): bool
+    {
+        return $this->dateTime->getTimestamp() > time();
+    }
+
+    public function isPast(): bool
+    {
+        return $this->dateTime->getTimestamp() < time();
     }
 
     ////////////////////////////////////////////////////////////////
 
-    public function getAsString(string $format = self::DEFAULT_FORMAT): string
+    public function setTimeZone(string $timeZoneName): \Library\DateTimeInterface
     {
-        return $this->create()->format($format);
+        $this->dateTime->setTimezone(new \DateTimeZone($timeZoneName));
+
+        return $this;
     }
 
-    public function getTimestamp(): int
+    public function getTimeZone(): \DateTimeZone
     {
-        return $this->create()->getTimestamp();
+        return $this->dateTime->getTimezone();
+    }
+
+    public function getOffset(): int
+    {
+        return $this->dateTime->getOffset();
+    }
+
+    public function getStringOffset(): string
+    {
+        return \Library\DateTime\TimeZone::getList()[$this->dateTime->getTimezone()->getName()];
     }
 
     ////////////////////////////////////////////////////////////////
 
-    public function create($value = null, string $format = self::DEFAULT_FORMAT): \DateTime
+    public function moreThan(\Library\DateTimeInterface $dateTime): bool
     {
-        switch (true) {
-            case is_null($value):
-                return new \DateTime('now', $this->timeZone);
-            case is_string($value):
-                return $this->createDateTimeFromString($value, $format);
-            case is_integer($value):
-                return $this->createDateTimeFromTimestamp($value);
-            default:
-                throw new \LogicException('Unsupported type: ' . gettype($value) . '. Used string or int.');
+        return $this->dateTime->getTimestamp() > $dateTime->toTimestamp();
+    }
+
+    public function difference(\Library\DateTimeInterface $dateTime, $absolute = false): \Library\DateTime\Interval
+    {
+        $dateInterval = $this->dateTime->diff($dateTime->getInstance());
+
+        if ($dateInterval === false) {
+            throw new \LogicException('Unable to retrieve difference.');
         }
+
+        return new \Library\DateTime\Interval(
+            $dateInterval,
+            $this->dateTime->getTimestamp() - $dateTime->toTimestamp()
+        );
     }
 
     ////////////////////////////////////////////////////////////////
 
-    public function format(
-        $value,
-        string $formatTo = self::DEFAULT_FORMAT,
-        string $formatFrom = self::DEFAULT_FORMAT
-    ): string {
-        switch (true) {
-            case $value instanceof \DateTime:
-                return $value->format($formatTo);
-            case is_string($value):
-                return $this->createDateTimeFromString($value, $formatFrom)->format($formatTo);
-            case is_integer($value):
-                return $this->createDateTimeFromTimestamp($value)->format($formatTo);
-            default:
-                throw new \LogicException(
-                    'Unsupported type: ' . gettype($value) . '. Used \DateTime, string or int.'
-                );
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////
-
-    public function addSeconds(\DateTime $dateTime, int $seconds): self
+    public function addSeconds(int $seconds): \Library\DateTimeInterface
     {
-        $dateTime->add(new \DateInterval("PT{$seconds}S"));
+        $dateTime = $this->dateTime->modify("+{$seconds} seconds");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function subtractSeconds(int $seconds): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("-{$seconds} seconds");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function addMinutes(int $minutes): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("+{$minutes} minutes");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function subtractMinutes(int $minutes): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("-{$minutes} minutes");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function addHours(int $hours): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("+{$hours} hours");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function subtractHours(int $hours): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("-{$hours} hours");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function addMonths(int $months): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("+{$months} months");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function subtractMonths(int $months): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("-{$months} months");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function addYears(int $years): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("+{$years} years");
+        $this->validateModify($dateTime);
+
+        return $this;
+    }
+
+    public function subtractYears(int $years): \Library\DateTimeInterface
+    {
+        $dateTime = $this->dateTime->modify("-{$years} years");
+        $this->validateModify($dateTime);
 
         return $this;
     }
 
     ////////////////////////////////////////////////////////////////
 
-    private function createDateTimeFromString(string $value, string $format): \DateTime
+    public function toTimestamp(): int
     {
-        $dateTime = \DateTime::createFromFormat($format, $value);
-
-        if ($dateTime === false) {
-            throw new \LogicException(
-                "Unable to create \DateTime object from given format: {$format}"
-            );
-        }
-
-        return $dateTime;
+        return $this->dateTime->getTimestamp();
     }
 
-    private function createDateTimeFromTimestamp(int $timestamp): \DateTime
+    public function toString(string $format = null): string
     {
-        $dateTime = $this->create();
-        $dateTime->setTimestamp($timestamp);
+        return $this->dateTime->format($format ?? $this->format);
+    }
 
-        return $dateTime;
+    ////////////////////////////////////////////////////////////////
+
+    public function getInstance(): \DateTime
+    {
+        return $this->dateTime;
+    }
+
+    ////////////////////////////////////////////////////////////////
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
+    ////////////////////////////////////////////////////////////////
+
+    private function now(): \DateTime
+    {
+        return new \DateTime('now', $this->getTimeZone());
+    }
+
+    private function validateModify($dateTime): void
+    {
+        if ($dateTime === false) {
+            $dateTimeClassName = \Library\DateTime::class;
+            throw new \LogicException("Unable to modify {$dateTimeClassName} object.");
+        }
     }
 
     ////////////////////////////////////////////////////////////////

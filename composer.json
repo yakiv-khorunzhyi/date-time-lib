@@ -2,7 +2,7 @@
     "name":              "yakiv-khorunzhyi/date-time-lib",
     "description":       "Simple library for working with DateTime.",
     "type":              "library",
-    "version":           "1.1",
+    "version":           "2",
     "license":           "MIT",
     "authors":           [
         {
@@ -13,8 +13,8 @@
     "minimum-stability": "stable",
     "autoload":          {
         "psr-4": {
-            "Lib\\":  "src/",
-            "Test\\": "tests/"
+            "Library\\": "src/",
+            "Test\\":    "tests/"
         }
     },
     "require":           {

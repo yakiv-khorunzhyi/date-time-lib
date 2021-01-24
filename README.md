@@ -4,7 +4,7 @@ Simple library for working with DateTime.
 ## Requirements
 | master    | 1.0      |
 |:----------|:--------:|
-| php       | \>\= 7.2 |
+| php       | 7.2      |
 
 ## Installation
 Install the latest version with:
